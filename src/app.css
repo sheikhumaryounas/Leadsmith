@@ -1,0 +1,85 @@
+/* App-only styles on top of the prototype design system (styles.css). */
+
+/* Router links in the sidebar behave like the prototype's nav buttons */
+.nav-group{display:contents}
+.nav .nav-btn{position:relative;display:flex;align-items:center;gap:12px;min-height:40px;width:100%;box-sizing:border-box;border-radius:8px;padding:0 10px;color:var(--ink-2);font-weight:500;font-size:14px;text-decoration:none}
+.nav .nav-btn:hover{background:#efece6;color:var(--ink)}
+.nav .nav-btn[aria-current="page"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(27,29,33,.06)}
+.nav .nav-btn[aria-current="page"] svg{color:var(--accent)}
+.app.mini .nav .nav-btn{width:44px;padding:0;margin:0 auto;justify-content:center}
+.app.mini .nav-group:first-child > .nav-sep{display:none}
+.who{position:relative}
+.logout{margin-left:auto;width:32px;height:32px;flex:none;display:grid;place-items:center;border:0;border-radius:8px;background:none;color:var(--ink-3)}
+.logout:hover{background:#efece6;color:var(--ink)}
+.logout svg{width:16px;height:16px}
+.app.mini .logout{display:none}
+
+.btn:disabled{opacity:.55;cursor:default;filter:none}
+.toast.err{background:var(--red)}
+.loading{display:flex;align-items:center;gap:10px;justify-content:center;padding:48px 0;color:var(--ink-3)}
+.spinner{width:18px;height:18px;border-radius:50%;border:2px solid var(--line-2);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mail-edit{display:block}
+.inline-form{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+.kv-input{width:100%;box-sizing:border-box;height:40px;border:1px solid var(--line-2);border-radius:8px;padding:0 12px;font:inherit;font-size:14px;background:var(--surface);color:var(--ink)}
+.answers{display:grid;gap:12px;margin-top:12px}
+.answers label{display:block;font-weight:600;font-size:13px;margin-bottom:4px}
+.answers small{display:block;color:var(--ink-3);font-size:12px;margin-bottom:6px}
+
+/* Sign in / sign up */
+.auth{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:var(--bg)}
+.auth-card{width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:32px}
+.auth-brand{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.auth-brand i{width:36px;height:36px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center}
+.auth-brand i svg{width:20px;height:20px}
+.auth-brand b{font-family:var(--display);font-stretch:112%;font-weight:800;font-size:18px}
+.auth h1{font-size:24px;margin:0}
+.auth .lede{margin-bottom:20px}
+.auth .form{gap:14px}
+.auth .form input{height:44px}
+.auth .btn{width:100%;min-height:44px;margin-top:4px}
+.auth-alt{margin:18px 0 0;font-size:13px;color:var(--ink-2);text-align:center}
+.auth-alt a{color:var(--accent-deep);font-weight:600}
+.demo-hint{margin-top:16px;padding:12px 14px;border-radius:8px;background:var(--accent-tint);color:var(--accent-deep);font-size:13px}
+.demo-hint code{font-family:var(--mono)}
+
+/* Sent emails list */
+.mails{list-style:none;margin:8px 0 0;padding:0}
+.mails li{border-top:1px solid var(--divider);padding:12px 0}
+.mails summary{display:flex;gap:10px;align-items:center;cursor:pointer;flex-wrap:wrap}
+.mails summary b{flex:1 1 200px;min-width:0;font-weight:600}
+.mails pre{white-space:pre-wrap;font:inherit;font-size:13px;background:var(--surface-2);border-radius:8px;padding:12px;margin:10px 0 0}
+.code-box{font-family:var(--mono);font-size:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:12px;white-space:pre-wrap;word-break:break-all;margin:8px 0 0}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Skeleton loading: grey shapes of the page with a soft shimmer */
+.sk{display:block;flex:none;max-width:100%;background:linear-gradient(90deg,#ebe7e0 0%,#f5f2ed 45%,#ebe7e0 90%);background-size:220% 100%;animation:sk 1.4s ease-in-out infinite}
+.sk.dark{background:linear-gradient(90deg,#2a2e34 0%,#353a41 45%,#2a2e34 90%);background-size:220% 100%}
+@keyframes sk{from{background-position:110% 0}to{background-position:-110% 0}}
+.skeleton .hero{display:block}
+.sk-table{background:var(--surface)}
+.sk-head{height:42px;background:linear-gradient(90deg,#1f2125 0%,#2c2724 35%,#46301f 70%,#6a3a22 100%);opacity:.35}
+.sk-row{display:flex;align-items:center;gap:20px;padding:14px 16px;border-top:1px solid var(--divider);flex-wrap:wrap}
+.sk-line{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--divider)}
+.sk-line:first-child{border-top:0}
+.sk-bars{display:flex;align-items:flex-end;justify-content:space-around;gap:8px;height:160px;margin:24px 0 0 44px;border-bottom:1px solid var(--line-2)}
+
+/* Toast: icon, message, optional Undo, countdown bar */
+.toast{display:flex;align-items:center;gap:10px;min-width:min(280px,calc(100% - 32px));overflow:hidden}
+.toast.show{pointer-events:auto}
+.toast.err,.toast.error{background:var(--red)}
+.toast-ic{display:grid;place-items:center;width:20px;height:20px;flex:none}
+.toast-ic svg{width:20px;height:20px}
+.toast-check circle{fill:none;stroke:#7fd3a4;stroke-width:2;stroke-dasharray:64;stroke-dashoffset:64;animation:draw .45s ease-out forwards}
+.toast-check path{fill:none;stroke:#7fd3a4;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:16;stroke-dashoffset:16;animation:draw .3s .3s ease-out forwards}
+.toast.show .toast-ic{animation:pop .35s cubic-bezier(.3,1.6,.6,1)}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{from{transform:scale(.4)}to{transform:scale(1)}}
+.toast-ring{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:#f08a52;animation:spin .8s linear infinite}
+.toast-msg{flex:1;min-width:0}
+.toast-act{flex:none;margin-left:6px;border:0;border-radius:6px;background:rgba(255,255,255,.14);color:#fff;font-weight:700;font-size:13px;padding:6px 12px;min-height:32px}
+.toast-act:hover{background:rgba(255,255,255,.24)}
+.toast-bar{position:absolute;left:0;bottom:0;height:3px;width:100%;background:#f08a52;transform-origin:left;animation:countdown linear forwards}
+@keyframes countdown{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+@media (prefers-reduced-motion:reduce){.sk,.toast-check circle,.toast-check path,.toast-bar,.toast-ring{animation:none!important;stroke-dashoffset:0}}
