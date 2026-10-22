@@ -21,6 +21,8 @@ export const config = {
     : null,
   mailFrom: env.MAIL_FROM || '',
   schedulerMs: Number(env.SCHEDULER_MS || 60000),
+  // Vercel Cron sends this as a Bearer token. Without it the cron endpoint stays closed.
+  cronSecret: env.CRON_SECRET || '',
 };
 
 if (!config.jwtSecret) throw new Error('JWT_SECRET must be set in production.');

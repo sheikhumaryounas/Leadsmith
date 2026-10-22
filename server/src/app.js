@@ -15,6 +15,7 @@ import jobs from './routes/jobs.js';
 import dashboard from './routes/dashboard.js';
 import settings from './routes/settings.js';
 import publicRoutes from './routes/public.js';
+import { runDue } from './services/scheduler.js';
 
 export function createApp() {
   const app = express();
@@ -29,6 +30,11 @@ export function createApp() {
   app.use('/api', cors({ origin: config.clientOrigin, credentials: true }));
 
   app.get('/api/health', (_req, res) => res.json({ ok: true }));
+  // On Vercel there is no long-running process, so a daily cron calls this instead of the scheduler.
+  app.get('/api/cron/run-due', async (req, res, next) => {
+    if (!config.cronSecret || req.get('authorization') !== `Bearer ${config.cronSecret}`) return res.status(401).json({ error: 'Not allowed' });
+    try { res.json(await runDue()); } catch (err) { next(err); }
+  });
   app.use('/api/auth', rateLimit({ windowMs: 15 * 60_000, limit: config.isTest ? 1000 : 50, standardHeaders: 'draft-7', legacyHeaders: false }), auth);
   app.use('/api/enquiries', requireAuth, enquiries);
   app.use('/api/jobs', requireAuth, jobs);
