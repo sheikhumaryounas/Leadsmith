@@ -1,8 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import mongoose from 'mongoose';
 import { config } from './config.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let memory = null;
 
 // Connects to MONGODB_URI. In development without one, starts a local MongoDB
@@ -11,7 +13,7 @@ export async function connectDb(uri = config.mongoUri) {
   if (!uri) {
     if (config.isProd) throw new Error('MONGODB_URI must be set in production.');
     const { MongoMemoryServer } = await import('mongodb-memory-server');
-    const dbPath = path.resolve(process.cwd(), '.data');
+    const dbPath = path.resolve(__dirname, '../.data');
     fs.mkdirSync(dbPath, { recursive: true });
     memory = await MongoMemoryServer.create({ instance: { dbPath, storageEngine: 'wiredTiger' } });
     uri = memory.getUri('leadsmith');
