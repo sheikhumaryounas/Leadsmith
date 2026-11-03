@@ -26,13 +26,13 @@ function NavItem({ to, label, icon, count, hot, end }) {
 }
 
 export function Layout() {
-  const { user, business, counts, refreshCounts, signOut } = useApp();
+  const { user, business, counts, refreshCounts } = useApp();
   const [mini, setMini] = useStored('leadsmith-sidebar-mini', false);
   const [adding, setAdding] = useState(false);
   const [keys, setKeys] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const office = user.role !== 'jobsheets';
+  const office = user?.role !== 'jobsheets';
 
   useEffect(() => { refreshCounts(); window.scrollTo(0, 0); }, [location.pathname, refreshCounts]);
 
@@ -58,7 +58,7 @@ export function Layout() {
         <div className="side-head">
           <div className="brand">
             <i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.5 7h14.2c.4 2.2 2.1 3.6 4.8 3.8v1.7c-2.7.2-4.3 1.3-4.6 3.5H7.4c-.2-1.9-1.6-3.1-4-3.6z" /><path d="M8.4 17.2h7.2l1.6 3.3H6.8z" /></svg></i>
-            <div className="brand-txt"><b>{business.name}</b><small>Leadsmith</small></div>
+            <div className="brand-txt"><b>{business?.name || 'Ridgeway Fabrication'}</b><small>Leadsmith</small></div>
           </div>
           <button className="collapse" onClick={() => setMini(!mini)} aria-label={mini ? 'Expand sidebar' : 'Collapse sidebar'} aria-expanded={!mini} title={mini ? 'Expand sidebar' : 'Collapse sidebar'}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5" /><path d="M9.5 4.5v15" />{mini ? <path d="m13.5 10 2 2-2 2" /> : <path d="m15.5 10-2 2 2 2" />}</svg>
@@ -83,9 +83,8 @@ export function Layout() {
         <div className="side-foot">
           {office && <div className="nav"><NavItem to="/settings" label="Settings" icon="sliders" /></div>}
           <div className="who">
-            <div className="av">{user.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()}</div>
-            <div className="who-txt"><b>{user.name}</b><span>{user.email}</span></div>
-            <button className="logout" onClick={signOut} title="Log out" aria-label="Log out"><Icon name="back" /></button>
+            <div className="av">{(user?.name || 'Dave Hartley').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()}</div>
+            <div className="who-txt"><b>{user?.name || 'Dave Hartley'}</b><span>{user?.email || 'dave@ridgewayfab.co.uk'}</span></div>
           </div>
         </div>
       </aside>

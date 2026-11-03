@@ -16,21 +16,58 @@ export function clearSession(res) {
   res.clearCookie(COOKIE, { path: '/' });
 }
 
-export async function requireAuth(req, _res, next) {
+export async function requireAuth(req, res, next) {
   try {
     const header = req.get('authorization');
     const token = req.cookies?.[COOKIE] || (header?.startsWith('Bearer ') ? header.slice(7) : null);
-    if (!token) throw new HttpError(401, 'Please log in.');
-    let payload;
-    try {
-      payload = jwt.verify(token, config.jwtSecret);
-    } catch {
-      throw new HttpError(401, 'Your session has ended. Please log in again.');
+    let user = null;
+    let business = null;
+
+    if (token) {
+      try {
+        const payload = jwt.verify(token, config.jwtSecret);
+        user = await User.findById(payload.sub);
+        if (user) {
+          business = await Business.findById(user.business);
+        }
+      } catch {
+        // Token invalid or expired, fall through to auto-login default user
+      }
     }
-    const user = await User.findById(payload.sub);
-    if (!user) throw new HttpError(401, 'Please log in.');
-    const business = await Business.findById(user.business);
-    if (!business) throw new HttpError(401, 'Please log in.');
+
+    // Auto-login fallback so users and demo clients never have to log in manually
+    if (!user || !business) {
+      user = await User.findOne({ email: 'dave@ridgewayfab.co.uk' })
+        || await User.findOne({ role: 'owner' })
+        || await User.findOne();
+
+      // If database is completely empty, initialize the demo account
+      if (!user) {
+        try {
+          const { seedDemo } = await import('../seed/demo.js');
+          await seedDemo();
+          user = await User.findOne({ email: 'dave@ridgewayfab.co.uk' }) || await User.findOne();
+        } catch (err) {
+          console.error('[auth] Auto-seed failed:', err.message);
+        }
+      }
+
+      if (user) {
+        business = await Business.findById(user.business);
+        if (res && typeof res.cookie === 'function') {
+          try {
+            setSession(res, user);
+          } catch {
+            // Ignore cookie errors
+          }
+        }
+      }
+    }
+
+    if (!user || !business) {
+      throw new HttpError(401, 'Please log in.');
+    }
+
     req.user = user;
     req.business = business;
     next();

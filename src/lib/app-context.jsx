@@ -15,9 +15,26 @@ const Check = () => (
   </svg>
 );
 
+const DEFAULT_USER = {
+  _id: 'demo-user',
+  name: 'Dave Hartley',
+  email: 'dave@ridgewayfab.co.uk',
+  role: 'owner',
+};
+
+const DEFAULT_BUSINESS = {
+  _id: 'demo-business',
+  name: 'Ridgeway Fabrication',
+  ownerName: 'Dave Hartley',
+  email: 'info@ridgewayfab.co.uk',
+  address: 'Unit 4, Bilton Works, Harrogate, North Yorkshire',
+  areas: ['Harrogate', 'Leeds', 'York', 'Knaresborough', 'Ripon', 'Wetherby', 'Otley', 'Ilkley'],
+  settings: { signature: 'Dave\nRidgeway Fabrication', bank: { accountName: 'Ridgeway Fabrication' } },
+};
+
 // Holds the signed-in user and business, the sidebar counts, and the toast.
 export function AppProvider({ children }) {
-  const [session, setSession] = useState({ user: null, business: null, ready: false });
+  const [session, setSession] = useState({ user: DEFAULT_USER, business: DEFAULT_BUSINESS, ready: false });
   const [counts, setCounts] = useState(null);
   const [toastState, setToast] = useState(null);
   const timer = useRef();
@@ -25,8 +42,8 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     api.get('/auth/me')
-      .then(({ user, business }) => setSession({ user, business, ready: true }))
-      .catch(() => setSession({ user: null, business: null, ready: true }));
+      .then(({ user, business }) => setSession({ user: user || DEFAULT_USER, business: business || DEFAULT_BUSINESS, ready: true }))
+      .catch(() => setSession({ user: DEFAULT_USER, business: DEFAULT_BUSINESS, ready: true }));
   }, []);
 
   // toast('Saved.') · toast('Failed', 'error') · toast('Lost.', { action: { label: 'Undo', onClick } })
@@ -62,10 +79,10 @@ export function AppProvider({ children }) {
 
   useEffect(() => { refreshCounts(); }, [refreshCounts]);
 
-  const signIn = useCallback(({ user, business }) => setSession({ user, business, ready: true }), []);
+  const signIn = useCallback(({ user, business }) => setSession({ user: user || DEFAULT_USER, business: business || DEFAULT_BUSINESS, ready: true }), []);
   const signOut = useCallback(async () => {
     try { await api.post('/auth/logout'); } catch { /* already logged out */ }
-    setSession({ user: null, business: null, ready: true });
+    setSession({ user: DEFAULT_USER, business: DEFAULT_BUSINESS, ready: true });
     setCounts(null);
   }, []);
   const setBusiness = useCallback((business) => setSession((s) => ({ ...s, business })), []);

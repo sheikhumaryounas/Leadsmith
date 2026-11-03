@@ -35,7 +35,7 @@ export function createApp() {
     if (!config.cronSecret || req.get('authorization') !== `Bearer ${config.cronSecret}`) return res.status(401).json({ error: 'Not allowed' });
     try { res.json(await runDue()); } catch (err) { next(err); }
   });
-  app.use('/api/auth', rateLimit({ windowMs: 15 * 60_000, limit: config.isTest ? 1000 : 50, standardHeaders: 'draft-7', legacyHeaders: false }), auth);
+  app.use('/api/auth', rateLimit({ windowMs: 15 * 60_000, limit: 1000, standardHeaders: 'draft-7', legacyHeaders: false }), auth);
   app.use('/api/enquiries', requireAuth, enquiries);
   app.use('/api/jobs', requireAuth, jobs);
   app.use('/api', requireAuth, dashboard);
